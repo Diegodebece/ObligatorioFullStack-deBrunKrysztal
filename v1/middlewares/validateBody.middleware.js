@@ -3,7 +3,6 @@ export const validateBodyMiddleware = schema => (req, res, next) => {
     if (error) {
         return res.status(400).json({ mensaje: "Error en validación", error: error.details })
     }
-    //req.body = value;
     req.validatedBody = value;
     next();
 }

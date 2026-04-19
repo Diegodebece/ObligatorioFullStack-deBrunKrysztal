@@ -20,7 +20,7 @@ const serieSchema = new mongoose.Schema({
         required: true, 
         min: 1
     },
-    episodiosTotales: {
+    episodiosPorTemporada: {
         type: Number,
         required: true, 
         min: 1

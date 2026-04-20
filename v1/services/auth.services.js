@@ -45,7 +45,7 @@ export const loginUsuarioService = async (email, password) => {
     const isMatch = bcrypt.compareSync(password, usuario.password);
 
     if (!isMatch) {
-        const error = new Error("Email o contraseña incorrectos");
+        const error = new Error("Email o contraseña incorrectos (password no coincide)");
         error.status = 400;
         throw error;
     }

@@ -15,10 +15,11 @@ export const registrarUsuarioSchema = Joi.object({
         "email.base" : "El formato debe ser el de correo electronico"
     }),
     password: Joi.string().required().min(8).pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/).messages({
+        //[A-Za-z\d]+$ : Solo letras y numeros, al menos una letra y un numero, prohibidos caracteres especiales
         "any.required": "El campo contraseña es obligatorio",
         "string.empty": "La contraseña no puede estar vacía",
         "string.min": "La contraseña debe tener al menos {#limit} caracteres",
-        "string.pattern.base": "La contraseña debe contener al menos una letra y un número",
+        "string.pattern.base": "La contraseña debe contener al menos una letra y un número, pero no puede contener caracteres especiales",
     }),
     confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
         "any.only": "Las contraseñas no coinciden",

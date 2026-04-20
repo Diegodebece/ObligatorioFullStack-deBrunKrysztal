@@ -8,6 +8,9 @@ import {
 
 export const obtenerSeguimientos = async (req, res) => {
     const seguimientos = await obtenerSeguimientosService();
+    if (!seguimientos || seguimientos.length === 0) {
+        return res.status(404).json({ message: "No se encontraron seguimientos" });
+    }
     res.status(200).json(seguimientos);
 }
 

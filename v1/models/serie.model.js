@@ -8,6 +8,10 @@ const serieSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    imagen:{
+        type: String,
+        required: true
+    },
     descripcion: {
         type: String
     },

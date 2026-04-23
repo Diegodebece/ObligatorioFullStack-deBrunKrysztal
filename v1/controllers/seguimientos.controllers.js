@@ -24,9 +24,16 @@ export const obtenerSeguimientoPorId = async (req, res) => {
 }
 
 export const crearSeguimiento = async (req, res) => {
-    const seguimientoData = req.body;
+
     try {
-        const nuevoSeguimiento = await crearSeguimientoService(seguimientoData);
+        const seguimientoData = req.body;
+
+        // id del usuario autenticado sacado del token
+        const usuario = req.decoded.id;
+        const nuevoSeguimiento = await crearSeguimientoService({
+            ...seguimientoData,
+            usuario
+        });
         res.status(201).json(nuevoSeguimiento);
     } catch (error) {
         res.status(400).json({ message: error.message });

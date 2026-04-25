@@ -1,4 +1,15 @@
-import { cambiarAPlanPremiumService, cambiarRolUsuarioService } from "../services/usuario.services.js";
+import { obtenerUsuariosService, obtenerUsuarioPorIdService, cambiarAPlanPremiumService, cambiarRolUsuarioService } from "../services/usuario.services.js";
+
+export const obtenerUsuarios = async (req, res) => {
+    const usuarios = await obtenerUsuariosService();
+    res.status(200).json(usuarios);
+}
+
+export const obtenerUsuarioPorId = async (req, res) => {
+    const { id } = req.params;
+    const usuario = await obtenerUsuarioPorIdService(id);
+    res.status(200).json(usuario);
+}
 
 export const cambiarPlanAPremium = async (req, res, next) => {
     try {

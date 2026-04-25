@@ -2,7 +2,7 @@ import express from "express";
 import { obtenerSeguimientos, obtenerSeguimientoPorId, crearSeguimiento, actualizarSeguimiento, eliminarSeguimiento } from "../controllers/seguimientos.controllers.js";
 import { validateBodyMiddleware } from "../middlewares/validateBody.middleware.js"; 
 import { crearSeguimientoSchema } from "../validators/seguimientos.validators.js";
-import router from "./serie.routes.js";
+//import router from "./serie.routes.js";
 
 const router = express.Router({ mergeParams: true });
 

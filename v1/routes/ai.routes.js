@@ -1,9 +1,9 @@
-import express from "express";
-import { useGemini25Flash } from "../controllers/ai.controllers.js";
-import { getModels } from "../controllers/ai.controllers.js";
-const router = express.Router({mergeParams: true});
+import express from 'express';
+import { getModels, useGemini25Flash } from '../controllers/ai.controllers.js';
 
-router.get("/", getModels)
+const router = express.Router({ mergeParams: true});
+
+router.get("/", getModels);
 router.post("/", useGemini25Flash);
 
 export default router;

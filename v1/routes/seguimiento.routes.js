@@ -6,7 +6,7 @@ import { crearSeguimientoSchema } from "../validators/seguimientos.validators.js
 
 const router = express.Router({ mergeParams: true });
 
-
+const router = express.Router({ mergeParams: true });
 
 router.get("/", obtenerSeguimientos);
 router.get("/:id", obtenerSeguimientoPorId);

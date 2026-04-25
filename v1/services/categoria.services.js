@@ -30,6 +30,20 @@ export const obtenerCategoriaPorIdService = async (id) => {
     return categoria;
 };
 
+export const crearCategoriaService = async (categoria) => {
+    const categoriaExistente = await Categoria.findOne({nombre: categoria.nombre});
+
+    if (categoriaExistente) {
+        const error = new Error("Ya existe una categoría con ese nombre");
+        error.status = 409;
+        throw error;
+    }
+
+    const nuevaCategoria = new Categoria(categoria);
+    await nuevaCategoria.save();
+    return nuevaCategoria;
+};
+
 export const actualizarCategoriaService = async (id, categoria) => {
 
     const categoriaActual = await Categoria.findById(id);
@@ -52,7 +66,7 @@ export const actualizarCategoriaService = async (id, categoria) => {
             }
         }
 
-    const categoriaActualizada = await Categoria.findByIdAndUpdate(id,categoria,{ returnDocument: "after" }, {runValidators: true});
+    const categoriaActualizada = await Categoria.findByIdAndUpdate(id,categoria,{ returnDocument: "after", runValidators: true});
     return categoriaActualizada;
 };
 

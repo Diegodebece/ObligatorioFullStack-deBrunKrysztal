@@ -1,5 +1,15 @@
 import Usuario from "../models/usuario.model.js";
 
+export const obtenerUsuariosService = async () => {
+    const usuarios = await Usuario.find();
+    return usuarios;
+}
+
+export const obtenerUsuarioPorIdService = async (id) => {
+    const usuario = await Usuario.findById(id);
+    return usuario;
+}
+
 export const cambiarAPlanPremiumService = async (usuarioId, rol) => {
     if (rol !== "viewer") {
         const error = new Error("Este usuario no puede cambiar de plan");

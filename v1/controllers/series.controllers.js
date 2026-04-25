@@ -8,12 +8,15 @@ import { uploadBufferToCloudinary } from "../utils/cloudinary.util.js";
 
 export const obtenerSeries = async (req, res) => {
     const series = await obtenerSeriesService();
+    if(series.length === 0) return res.status(204).json({ message: "No hay series disponibles" });
     res.status(200).json(series);
 }
 
 export const obtenerSeriePorId = async (req, res) => {
     const { id } = req.params;
     const serie = await obtenerSeriePorIdService(id);
+
+    
     res.status(200).json(serie);
 }
 

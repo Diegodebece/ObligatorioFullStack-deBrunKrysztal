@@ -8,6 +8,9 @@ import {
 
 export const obtenerSeguimientos = async (req, res) => {
     const seguimientos = await obtenerSeguimientosService();
+    if (!seguimientos || seguimientos.length === 0) {
+        return res.status(404).json({ message: "No se encontraron seguimientos" });
+    }
     res.status(200).json(seguimientos);
 }
 
@@ -21,9 +24,16 @@ export const obtenerSeguimientoPorId = async (req, res) => {
 }
 
 export const crearSeguimiento = async (req, res) => {
-    const seguimientoData = req.body;
+
     try {
-        const nuevoSeguimiento = await crearSeguimientoService(seguimientoData);
+        const seguimientoData = req.body;
+
+        // id del usuario autenticado sacado del token
+        const usuario = req.decoded.id;
+        const nuevoSeguimiento = await crearSeguimientoService({
+            ...seguimientoData,
+            usuario
+        });
         res.status(201).json(nuevoSeguimiento);
     } catch (error) {
         res.status(400).json({ message: error.message });

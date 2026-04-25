@@ -1,5 +1,19 @@
 import Categoria from "../models/categoria.model.js";
 
+export const crearCategoriaService = async (categoriaData) => {
+    const { nombre, descripcion, activa } = categoriaData;
+    const categoriaExistente = await Categoria.findOne({ nombre: nombre });
+
+    if (categoriaExistente) {
+        const error = new Error("Ya existe una categoría con ese nombre");
+        error.status = 409;
+        throw error;
+    }
+
+    const nuevaCategoria = new Categoria({ nombre, descripcion, activa });
+    return await nuevaCategoria.save();
+};
+
 export const obtenerCategoriasService = async () => {
     return await Categoria.find();
 };

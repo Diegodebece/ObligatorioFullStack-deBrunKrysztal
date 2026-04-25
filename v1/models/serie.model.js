@@ -29,6 +29,10 @@ const serieSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 1
+    },
+    imagen: {
+        type: String,
+        required: true
     },  
     categoria: {
         type: mongoose.Schema.Types.ObjectId, ref : "Categoria",

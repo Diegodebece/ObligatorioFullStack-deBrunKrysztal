@@ -4,7 +4,7 @@ import { validateBodyMiddleware } from "../middlewares/validateBody.middleware.j
 import { crearSeguimientoSchema } from "../validators/seguimientos.validators.js";
 import router from "./serie.routes.js";
 
-
+const router = express.Router({ mergeParams: true });
 
 router.get("/", obtenerSeguimientos);
 router.get("/:id", obtenerSeguimientoPorId);

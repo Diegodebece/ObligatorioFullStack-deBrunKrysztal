@@ -43,6 +43,13 @@ export const crearSerieSchema = Joi.object({
         "any.required": "Los minutos por episodio son obligatorios"
     }),
 
+    imagen: Joi.string().uri().required().messages({
+        "string.base": "La imagen debe ser un texto",
+        "string.empty": "La imagen es obligatoria",
+        "string.uri": "La imagen debe ser una URL válida",
+        "any.required": "La imagen es obligatoria"
+    }),
+
     categoria: Joi.string().required().messages({
         "string.base": "La categoría debe ser un texto",
         "string.empty": "La categoría no puede estar vacía",

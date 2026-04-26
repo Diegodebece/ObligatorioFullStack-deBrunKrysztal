@@ -1,13 +1,22 @@
 import {registrarUsuarioService, loginUsuarioService} from "../services/auth.services.js";
 
-export const registrarUsuario = async (req, res) => {
-    const { usuario, token } = await registrarUsuarioService(req.validatedBody);
-    res.json({ message: "Usuario registrado", token });
+export const registrarUsuario = async (req, res, next) => {
+    try{
+        const { usuario, token } = await registrarUsuarioService(req.validatedBody);
+        return res.status(201).json({ success: true, message: "Usuario registrado correctamente", token });
+
+    }
+    catch(error){
+        next(error);
+    }
 }
 
-export const loginUsuario = async (req, res) => {
-    const { email, password } = req.validatedBody;
-    const result = await loginUsuarioService(email, password);
-    if(result.message) return res.status(400).json(result);
-    res.json({ message: "Usuario logueado", ...result });
+export const loginUsuario = async (req, res, next) => {
+    try {
+        const { email, password } = req.validatedBody;
+        const result = await loginUsuarioService(email, password);
+        return res.status(200).json({ success: true, message: "Usuario logueado correctamente", ...result });
+    } catch (error) {
+        next(error);
+    }
 }

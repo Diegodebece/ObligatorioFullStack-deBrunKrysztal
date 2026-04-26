@@ -11,7 +11,7 @@ export const registrarUsuarioService = async (usuarioData) => {
 
     if (usuarioExistente) {
         const error = new Error("El usuario ya existe");
-        error.status = 400;
+        error.status = 409;
 
         if (usuarioExistente.email === email.toLowerCase()) {
             error.message = "El email ya está registrado";
@@ -45,7 +45,7 @@ export const loginUsuarioService = async (email, password) => {
     const isMatch = bcrypt.compareSync(password, usuario.password);
 
     if (!isMatch) {
-        const error = new Error("Email o contraseña incorrectos (password no coincide)");
+        const error = new Error("Email o contraseña incorrectos");
         error.status = 400;
         throw error;
     }

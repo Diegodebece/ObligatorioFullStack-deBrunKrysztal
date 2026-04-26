@@ -5,7 +5,6 @@ import seriesRouter from './routes/serie.routes.js';
 import usuarioRouter from './routes/usuario.routes.js';
 import categoriaRouter from './routes/categoria.routes.js';
 import seguimientoRouter from './routes/seguimiento.routes.js';
-import categoriaRouter from './routes/categoria.routes.js';
 import uploadsRouter from './routes/uploads.routes.js';
 import aiRouter from './routes/ai.routes.js';
 

@@ -3,7 +3,9 @@ import {
     obtenerSeguimientoPorIdService,
     crearSeguimientoService,
     actualizarSeguimientoService,
-    eliminarSeguimientoService
+    eliminarSeguimientoService,
+    generarRecomendacionesService,
+    obtenerSeriesMasVistasService
 } from "../services/seguimiento.services.js";
 
 export const obtenerSeguimientos = async (req, res) => {
@@ -60,3 +62,30 @@ export const eliminarSeguimiento = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+export const generarRecomendaciones = async (req, res, next) => {
+    const idUsuario = req.decoded.id;
+    
+    try {
+        const recomendaciones = await generarRecomendacionesService(idUsuario);
+        res.json({
+            message: "Recomendación generada correctamente",
+            final: recomendaciones
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const obtenerSeriesMasVistas = async (req, res, next) => {
+    try {
+        const series = await obtenerSeriesMasVistasService();
+
+        res.json({
+            message: "Series más miradas obtenidas correctamente",
+            data: series
+        });
+    } catch (error) {
+        next(error);
+    }
+};

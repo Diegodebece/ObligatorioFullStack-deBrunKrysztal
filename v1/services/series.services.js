@@ -26,7 +26,7 @@ export const crearSerieService = async (serie) => {
         throw error;
     }
 
-    const categoriaExiste = await Categoria.findOne({ categoria: serie.categoria });
+    const categoriaExiste = await Categoria.findById(serie.categoria);
 
     if (!categoriaExiste) {
         const error = new Error("La categoría no existe");

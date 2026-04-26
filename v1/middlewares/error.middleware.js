@@ -1,5 +1,5 @@
 export const errorMiddleware = (err, req, res, next) => {
-    //evitar en producción
-    console.error(err.stack);
-    res.status(err.status || 500).json({ message: err.message || "Error interno del servidor", details: err.details || "Error interno del servidor" });
+    const response = { message: err.message || "Error interno del servidor",};
+    if (err.details) { response.details = err.details; }
+    res.status(err.status || 500).json(response);
 }

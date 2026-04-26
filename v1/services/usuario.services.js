@@ -3,12 +3,17 @@ import Usuario from "../models/usuario.model.js";
 export const obtenerUsuariosService = async () => {
     const usuarios = await Usuario.find();
     return usuarios;
-}
+};
 
 export const obtenerUsuarioPorIdService = async (id) => {
     const usuario = await Usuario.findById(id);
+    if (!usuario) {
+        const error = new Error("Usuario no encontrado");
+        error.status = 404;
+        throw error;
+    }
     return usuario;
-}
+};
 
 export const cambiarAPlanPremiumService = async (usuarioId, rol) => {
     if (rol !== "viewer") {
@@ -33,17 +38,15 @@ export const cambiarAPlanPremiumService = async (usuarioId, rol) => {
 
     if (usuario.plan !== "plus") {
         const error = new Error("Solo se puede cambiar a premium desde el plan plus");
-        error.status = 400;
+        error.status = 409;
         throw error;
     }
 
     usuario.plan = "premium";
     await usuario.save();
 
-    return {
-        message: "Plan cambiado a premium exitosamente",
-        plan: usuario.plan
-    }
+    return { plan: usuario.plan };
+    
 };
 
 export const cambiarRolUsuarioService = async (id, rol) => {
@@ -72,6 +75,7 @@ export const cambiarRolUsuarioService = async (id, rol) => {
 
     await usuario.save();
 
-    return usuario;
+    return usuario; 
 };
+
 

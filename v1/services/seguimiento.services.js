@@ -10,7 +10,9 @@ export const obtenerSeguimientosService = async () =>{
 
 export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) =>{
     const seguimiento = await Seguimiento.findById(id);
-    console.log(seguimiento);
+    console.log("ID del dueño del seguimiento:", seguimiento.usuario.toString());
+    console.log("ID del usuario logueado:", idUsuarioLogueado.toString());
+    console.log("Son iguales:", seguimiento.usuario.toString() === idUsuarioLogueado.toString());
     if (!seguimiento) {
         const error = new Error("Seguimiento no encontrado");
         error.statusCode = 404;

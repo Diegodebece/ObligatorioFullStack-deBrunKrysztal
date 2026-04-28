@@ -14,7 +14,7 @@ router.get("/recomendaciones", validateUser, generarRecomendaciones);
 router.post("/", validateBodyMiddleware(crearSeguimientoSchema), crearSeguimiento);
 
 router.patch("/:id", validateUser, validateBodyMiddleware(crearSeguimientoSchema), actualizarSeguimiento);
-router.get("/:id", validateUser, obtenerSeguimientoPorId);
+router.get("/:id", obtenerSeguimientoPorId);
 router.delete("/:id", validateUser, eliminarSeguimiento);
 
 export default router;

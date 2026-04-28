@@ -10,12 +10,12 @@ const router = express.Router({ mergeParams: true });
 
 router.get("/", obtenerSeguimientos);
 router.get("/trending", obtenerSeriesMasVistas);
-router.get("/recomendaciones", validateUser, generarRecomendaciones);
+router.get("/recomendaciones", generarRecomendaciones);
 
-router.post("/", validateBodyMiddleware(crearSeguimientoSchema), crearSeguimiento);
+router.post("/", authenticateMiddleware, validateBodyMiddleware(crearSeguimientoSchema), crearSeguimiento);
 
-router.patch("/:id", validateUser, validateBodyMiddleware(crearSeguimientoSchema), actualizarSeguimiento);
+router.patch("/:id", authenticateMiddleware, validateBodyMiddleware(crearSeguimientoSchema), actualizarSeguimiento);
 router.get("/:id", authenticateMiddleware, obtenerSeguimientoPorId);
-router.delete("/:id", validateUser, eliminarSeguimiento);
+router.delete("/:id", authenticateMiddleware, eliminarSeguimiento);
 
 export default router;

@@ -30,7 +30,7 @@ export const crearSeguimientoService = async (seguimientoData) =>{
     const cantidadSeguimientos = await Seguimiento.countDocuments({
     usuario: seguimientoData.usuario
 });
-    if (cantidadSeguimientos >= 4) {
+    if (cantidadSeguimientos >= 4 && seguimientoData.plan === "plus") {
         const error = new Error("Has alcanzado el límite de 4 seguimientos. Elimina algunos para agregar nuevos.");
         error.status = 400;
         throw error;

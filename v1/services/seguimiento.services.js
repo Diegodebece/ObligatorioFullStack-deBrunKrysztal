@@ -3,12 +3,12 @@ import Seguimiento from "../models/seguimiento.model.js";
 import { useGemini25Flash } from "./gemini.services.js";
 
 
-export const obtenerSeguimientosService = async () =>{
+export const obtenerSeguimientosService = async () => {
     const seguimientos = await Seguimiento.find();
     return seguimientos;
 }
 
-export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) =>{
+export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) => {
     const seguimiento = await Seguimiento.findById(id);
     console.log("ID del dueño del seguimiento:", seguimiento.usuario.toString());
     console.log("ID del usuario logueado:", idUsuarioLogueado.toString());
@@ -26,10 +26,20 @@ export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) =>{
     return seguimiento;
 }
 
-export const crearSeguimientoService = async (seguimientoData) =>{
+export const crearSeguimientoService = async (seguimientoData) => {
     const cantidadSeguimientos = await Seguimiento.countDocuments({
-    usuario: seguimientoData.usuario
-});
+        usuario: seguimientoData.usuario
+    });
+    const seguimientoExistente = await Seguimiento.findOne({
+        usuario: seguimientoData.usuario,
+        serie: seguimientoData.serie
+    });
+    if (seguimientoExistente) {
+        const error = new Error("Ya existe un seguimiento para esta serie.");
+        error.status = 409;
+        throw error;
+    }
+
     if (cantidadSeguimientos >= 4 && seguimientoData.plan === "plus") {
         const error = new Error("Has alcanzado el límite de 4 seguimientos. Elimina algunos para agregar nuevos.");
         error.status = 400;
@@ -40,12 +50,12 @@ export const crearSeguimientoService = async (seguimientoData) =>{
     return nuevoSeguimiento;
 }
 
-export const actualizarSeguimientoService = async (id, seguimientoData) =>{
+export const actualizarSeguimientoService = async (id, seguimientoData) => {
     const seguimientoActualizado = await Seguimiento.findByIdAndUpdate(id, seguimientoData, { returnDocument: "after" });
     return seguimientoActualizado;
 }
 
-export const eliminarSeguimientoService = async (id) =>{
+export const eliminarSeguimientoService = async (id) => {
     const seguimientoEliminado = await Seguimiento.findByIdAndDelete(id);
     return seguimientoEliminado;
 }

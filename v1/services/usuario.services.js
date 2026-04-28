@@ -52,7 +52,7 @@ export const cambiarAPlanPremiumService = async (usuarioId, rol) => {
             rol: usuario.rol,
             plan: usuario.plan
         },
-        process.env.JWT_SECRET,
+        process.env.SECRET_KEY,
         {
             expiresIn: "1h"
         }

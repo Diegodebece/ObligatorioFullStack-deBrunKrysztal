@@ -26,7 +26,12 @@ export const cambiarPlanAPremium = async (req, res, next) => {
 
         const resultado = await cambiarAPlanPremiumService(usuarioId, rol);
 
-        return res.status(200).json({ success: true, message: "Plan cambiado a premium exitosamente", data: resultado });
+        return res.status(200).json({
+            success: true,
+            message: "Plan cambiado a premium exitosamente",
+            data: resultado.usuario,
+            token: resultado.token
+        });
     } catch (error) {
         next(error);
     }

@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import Usuario from "../models/usuario.model.js";
 
 export const obtenerUsuariosService = async () => {
@@ -45,7 +46,26 @@ export const cambiarAPlanPremiumService = async (usuarioId, rol) => {
     usuario.plan = "premium";
     await usuario.save();
 
-    return { plan: usuario.plan };
+        const token = jwt.sign(
+        {
+            id: usuario._id,
+            rol: usuario.rol,
+            plan: usuario.plan
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: "1h"
+        }
+    );
+
+    return {
+        usuario: {
+            id: usuario._id,
+            rol: usuario.rol,
+            plan: usuario.plan
+        },
+        token
+    };
     
 };
 

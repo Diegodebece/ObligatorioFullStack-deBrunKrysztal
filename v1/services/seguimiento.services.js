@@ -8,12 +8,30 @@ export const obtenerSeguimientosService = async () =>{
     return seguimientos;
 }
 
-export const obtenerSeguimientoPorIdService = async (id) =>{
+export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) =>{
     const seguimiento = await Seguimiento.findById(id);
+    if (!seguimiento) {
+        const error = new Error("Seguimiento no encontrado");
+        error.statusCode = 404;
+        throw error;
+    }
+    if (seguimiento.usuario.toString() !== idUsuarioLogueado) {
+        const error = new Error("No tienes permiso para acceder a este seguimiento");
+        error.statusCode = 403;
+        throw error;
+    }
     return seguimiento;
 }
 
 export const crearSeguimientoService = async (seguimientoData) =>{
+    const cantidadSeguimientos = await Seguimiento.countDocuments({
+    usuario: seguimientoData.usuario
+});
+    if (cantidadSeguimientos >= 4) {
+        const error = new Error("Has alcanzado el límite de 4 seguimientos. Elimina algunos para agregar nuevos.");
+        error.status = 400;
+        throw error;
+    }
     const nuevoSeguimiento = new Seguimiento(seguimientoData);
     await nuevoSeguimiento.save();
     return nuevoSeguimiento;
@@ -30,8 +48,7 @@ export const eliminarSeguimientoService = async (id) =>{
 }
 
 export const generarRecomendacionesService = async (id) => {
-    const seguimientos = await Seguimiento.find({ usuario: id })
-        .populate("serie");
+    const seguimientos = await Seguimiento.find({ usuario: id }).populate("serie");
 
     if (!seguimientos || seguimientos.length === 0) {
         const error = new Error("No se encontraron seguimientos para generar recomendaciones");
@@ -39,9 +56,7 @@ export const generarRecomendacionesService = async (id) => {
         throw error;
     }
 
-    const seriesVistas = seguimientos
-        .map(seg => seg.serie?.titulo)
-        .filter(Boolean);
+    const seriesVistas = seguimientos.map(seg => seg.serie?.titulo).filter(Boolean);
 
     const textoPrompt = `Recomienda 5 series basado en las siguientes series: ${seriesVistas.join(", ")}. Asegurate de separarlas por punto y comas y de no incluir nada mas que el nombre de la serie. Si no hay suficientes series, completa con recomendaciones generales.`;
     const recomendacionesTexto = await useGemini25Flash(textoPrompt);
@@ -53,9 +68,7 @@ export const generarRecomendacionesService = async (id) => {
 
     const seriesRecomendadas = await buscarSeriesEnTvMaze(nombresRecomendados);
 
-    return seriesRecomendadas.length > 0
-        ? seriesRecomendadas
-        : nombresRecomendados.map(nombre => ({ titulo: nombre }));
+    return seriesRecomendadas.length > 0 ? seriesRecomendadas : nombresRecomendados.map(nombre => ({ titulo: nombre }));
 }
 
 export const separarSeriesPorPuntoYComa = (textoGemini) => {
@@ -63,10 +76,7 @@ export const separarSeriesPorPuntoYComa = (textoGemini) => {
         return [];
     }
 
-    return textoGemini
-        .split(";")
-        .map(nombre => nombre.trim())
-        .filter(nombre => nombre.length > 0);
+    return textoGemini.split(";").map(nombre => nombre.trim()).filter(nombre => nombre.length > 0);
 };
 
 

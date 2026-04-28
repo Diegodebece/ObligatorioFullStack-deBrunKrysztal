@@ -7,8 +7,8 @@ import authorize from "../middlewares/authorize.middleware.js";
 const router = express.Router({ mergeParams: true });
 
 router.get("/", obtenerSeries);
-router.get("/:id", obtenerSeriePorId);
 router.post("/", authorize(["admin"]), crearSerie);
+router.get("/:id", obtenerSeriePorId);
 router.patch("/:id", authorize(["admin"]), validateBodyMiddleware(crearSerieSchema), actualizarSerie);
 router.delete("/:id", authorize(["admin"]), eliminarSerie);
 

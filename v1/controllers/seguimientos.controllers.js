@@ -18,7 +18,9 @@ export const obtenerSeguimientos = async (req, res) => {
 
 export const obtenerSeguimientoPorId = async (req, res) => {
     const { id } = req.params;
-    const seguimiento = await obtenerSeguimientoPorIdService(id);
+    const usuarioLogueado = req.decoded.id;
+    const seguimiento = await obtenerSeguimientoPorIdService(id, usuarioLogueado);
+    
     if (!seguimiento) {
         return res.status(404).json({ message: "Seguimiento no encontrado" });
     }
@@ -65,7 +67,7 @@ export const eliminarSeguimiento = async (req, res) => {
 
 export const generarRecomendaciones = async (req, res, next) => {
     const idUsuario = req.decoded.id;
-    
+
     try {
         const recomendaciones = await generarRecomendacionesService(idUsuario);
         res.json({

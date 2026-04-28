@@ -10,12 +10,13 @@ export const obtenerSeguimientosService = async () =>{
 
 export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) =>{
     const seguimiento = await Seguimiento.findById(id);
+    console.log(seguimiento);
     if (!seguimiento) {
         const error = new Error("Seguimiento no encontrado");
         error.statusCode = 404;
         throw error;
     }
-    if (seguimiento.usuario.toString() !== idUsuarioLogueado) {
+    if (seguimiento.usuario.toString() !== idUsuarioLogueado.toString()) {
         const error = new Error("No tienes permiso para acceder a este seguimiento");
         error.statusCode = 403;
         throw error;

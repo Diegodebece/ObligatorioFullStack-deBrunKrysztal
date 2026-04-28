@@ -29,7 +29,7 @@ export const registrarUsuarioService = async (usuarioData) => {
     });
 
     await nuevoUsuario.save();
-    const token = jwt.sign({ id: nuevoUsuario._id, rol: nuevoUsuario.rol }, process.env.SECRET_KEY, { expiresIn: "1d" });
+    const token = jwt.sign({ id: nuevoUsuario._id, rol: nuevoUsuario.rol, plan: nuevoUsuario.plan }, process.env.SECRET_KEY, { expiresIn: "1d" });
     return { token };
 };
 
@@ -50,6 +50,6 @@ export const loginUsuarioService = async (email, password) => {
         throw error;
     }
 
-    const token = jwt.sign({ id: usuario._id, rol: usuario.rol }, process.env.SECRET_KEY, { expiresIn: "1d" });
+    const token = jwt.sign({ id: usuario._id, rol: usuario.rol, plan: usuario.plan }, process.env.SECRET_KEY, { expiresIn: "1d" });
     return { token };
 };

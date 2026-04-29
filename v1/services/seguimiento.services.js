@@ -26,6 +26,16 @@ export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) => {
     return seguimiento;
 }
 
+export const obtenerSeguimientosDeUsuarioService = async (idUsuario) => {
+    const seguimientos = await Seguimiento.find({ usuario: idUsuario }).populate("serie");
+    if (!seguimientos || seguimientos.length === 0) {
+        const error = new Error("No se encontraron seguimientos para este usuario");
+        error.statusCode = 404;
+        throw error;
+    }
+    return seguimientos;
+}
+
 export const crearSeguimientoService = async (seguimientoData) => {
     const cantidadSeguimientos = await Seguimiento.countDocuments({
         usuario: seguimientoData.usuario
@@ -51,9 +61,46 @@ export const crearSeguimientoService = async (seguimientoData) => {
 }
 
 export const actualizarSeguimientoService = async (id, seguimientoData) => {
-    const seguimientoActualizado = await Seguimiento.findByIdAndUpdate(id, seguimientoData, { returnDocument: "after" });
+    const seguimiento = await Seguimiento.findById(id).populate("serie");
+      if (!seguimiento) {
+        const error = new Error("Seguimiento no encontrado");
+        error.status = 404;
+        throw error;
+    }
+    const serie = seguimiento.serie;
+
+    const temporadaActual = seguimientoData.temporadaActual;
+    const episodioActual = seguimientoData.episodioActual;
+
+    
+    if (temporadaActual !== undefined && temporadaActual !== null && temporadaActual > serie.cantidadTemporadas ) {
+        const error = new Error(
+            `La serie solo tiene ${serie.cantidadTemporadas} temporadas`
+        );
+        error.status = 400;
+        throw error;
+    }
+
+    if (episodioActual !== undefined && episodioActual !== null && episodioActual > serie.episodiosPorTemporada) {
+        const error = new Error(
+            `La serie solo tiene ${serie.episodiosPorTemporada} episodios por temporada`
+        );
+        error.status = 400;
+        throw error;
+    }
+
+    const seguimientoActualizado = await Seguimiento.findByIdAndUpdate(
+        id,
+        seguimientoData,
+        {
+            new: true,
+            runValidators: true
+        }
+    ).populate("serie");
+
     return seguimientoActualizado;
-}
+};
+   
 
 export const eliminarSeguimientoService = async (id) => {
     const seguimientoEliminado = await Seguimiento.findByIdAndDelete(id);

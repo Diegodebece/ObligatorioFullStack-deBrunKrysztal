@@ -1,5 +1,6 @@
 import {
     obtenerSeguimientosService,
+    obtenerSeguimientosDeUsuarioService,
     obtenerSeguimientoPorIdService,
     crearSeguimientoService,
     actualizarSeguimientoService,
@@ -13,6 +14,12 @@ export const obtenerSeguimientos = async (req, res) => {
     if (!seguimientos || seguimientos.length === 0) {
         return res.status(404).json({ message: "No se encontraron seguimientos" });
     }
+    res.status(200).json(seguimientos);
+}
+
+export const obtenerSeguimientosDeUsuario = async (req, res) => {
+    const idUsuario = req.decoded.id;
+    const seguimientos = await obtenerSeguimientosDeUsuarioService(idUsuario);
     res.status(200).json(seguimientos);
 }
 

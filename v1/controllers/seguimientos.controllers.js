@@ -36,22 +36,20 @@ export const obtenerSeguimientosDeUsuario = async (req, res, next) => {
 
 export const obtenerSeguimientoPorId = async (req, res, next) => {
     try {
-    const { id } = req.params;
-    const usuarioLogueado = req.decoded.id;
-    const seguimiento = await obtenerSeguimientoPorIdService(id, usuarioLogueado);
+        const { id } = req.params;
+        const usuarioLogueado = req.decoded.id;
+        const seguimiento = await obtenerSeguimientoPorIdService(id, usuarioLogueado);
+        res.status(200).json(seguimiento);
     } catch (error) {
         next(error);
     }
-   
-    res.status(200).json(seguimiento);
+
 }
 
 export const crearSeguimiento = async (req, res, next) => {
 
     try {
         const seguimientoData = req.body;
-
-        // id del usuario autenticado sacado del token
         const usuario = req.decoded.id;
         const plan = req.decoded.plan;
         const nuevoSeguimiento = await crearSeguimientoService({

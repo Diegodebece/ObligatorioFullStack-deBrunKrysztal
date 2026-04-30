@@ -1,5 +1,6 @@
 import axios from "axios";
 import Seguimiento from "../models/seguimiento.model.js";
+import Serie from "../models/serie.model.js";
 import { useGemini25Flash } from "./gemini.services.js";
 
 
@@ -16,12 +17,12 @@ export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) => {
     
     if (!seguimiento) {
         const error = new Error("Seguimiento no encontrado");
-        error.statusCode = 404;
+        error.status = 404;
         throw error;
     }
     if (seguimiento.usuario.toString() !== idUsuarioLogueado.toString()) {
         const error = new Error("No tienes permiso para acceder a este seguimiento");
-        error.statusCode = 403;
+        error.status = 403;
         throw error;
     }
     return seguimiento;
@@ -34,7 +35,7 @@ export const obtenerSeguimientosDeUsuarioService = async (idUsuario, page, limit
     const seguimientos = await Seguimiento.find({ usuario: idUsuario }).populate("serie").skip(skip).limit(limitNumber);
     if (!seguimientos || seguimientos.length === 0) {
         const error = new Error("No se encontraron seguimientos para este usuario");
-        error.statusCode = 404;
+        error.status = 404;
         throw error;
     }
     return seguimientos;

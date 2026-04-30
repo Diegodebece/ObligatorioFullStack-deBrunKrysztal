@@ -18,25 +18,35 @@ export const obtenerSeguimientos = async (req, res) => {
     res.status(200).json(seguimientos);
 }
 
-export const obtenerSeguimientosDeUsuario = async (req, res) => {
-    const { page, limit } = req.query;
-    const idUsuario = req.decoded.id;
-    const seguimientos = await obtenerSeguimientosDeUsuarioService(idUsuario);
-    res.status(200).json(seguimientos);
-}
 
-export const obtenerSeguimientoPorId = async (req, res) => {
+
+export const obtenerSeguimientosDeUsuario = async (req, res, next) => {
+    try {
+        const { page, limit } = req.query;
+        const idUsuario = req.decoded.id;
+
+        const seguimientos = await obtenerSeguimientosDeUsuarioService(idUsuario, page, limit);
+
+        res.status(200).json(seguimientos);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const obtenerSeguimientoPorId = async (req, res, next) => {
+    try {
     const { id } = req.params;
     const usuarioLogueado = req.decoded.id;
     const seguimiento = await obtenerSeguimientoPorIdService(id, usuarioLogueado);
-    
-    if (!seguimiento) {
-        return res.status(404).json({ message: "Seguimiento no encontrado" });
+    } catch (error) {
+        next(error);
     }
+   
     res.status(200).json(seguimiento);
 }
 
-export const crearSeguimiento = async (req, res) => {
+export const crearSeguimiento = async (req, res, next) => {
 
     try {
         const seguimientoData = req.body;
@@ -51,28 +61,28 @@ export const crearSeguimiento = async (req, res) => {
         });
         res.status(201).json(nuevoSeguimiento);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 }
 
-export const actualizarSeguimiento = async (req, res) => {
+export const actualizarSeguimiento = async (req, res, next) => {
     const { id } = req.params;
     const seguimientoData = req.body;
     try {
         const seguimientoActualizado = await actualizarSeguimientoService(id, seguimientoData);
         res.status(200).json(seguimientoActualizado);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 }
 
-export const eliminarSeguimiento = async (req, res) => {
+export const eliminarSeguimiento = async (req, res, next) => {
     const { id } = req.params;
     try {
         const seguimientoEliminado = await eliminarSeguimientoService(id);
         res.status(200).json(seguimientoEliminado);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 }
 

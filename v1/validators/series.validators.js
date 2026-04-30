@@ -50,7 +50,7 @@ export const crearSerieSchema = Joi.object({
         "any.required": "La imagen es obligatoria"
     }),
 
-    categoria: Joi.string().required().messages({
+    categoria: Joi.string().trim().hex().required().messages({
         "string.base": "La categoría debe ser un texto",
         "string.empty": "La categoría no puede estar vacía",
         "any.required": "La categoría es obligatoria"

@@ -9,10 +9,8 @@ export const obtenerSeguimientosService = async () => {
 }
 
 export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) => {
-    const seguimiento = await Seguimiento.findById(id);
-    console.log("ID del dueño del seguimiento:", seguimiento.usuario.toString());
-    console.log("ID del usuario logueado:", idUsuarioLogueado.toString());
-    console.log("Son iguales:", seguimiento.usuario.toString() === idUsuarioLogueado.toString());
+    const seguimiento = await Seguimiento.findById(id).populate("serie");
+    
     if (!seguimiento) {
         const error = new Error("Seguimiento no encontrado");
         error.statusCode = 404;
@@ -37,6 +35,12 @@ export const obtenerSeguimientosDeUsuarioService = async (idUsuario) => {
 }
 
 export const crearSeguimientoService = async (seguimientoData) => {
+    const serieExiste = await Serie.findById(seguimientoData.serie);
+        if (!serieExiste) {
+        const error = new Error("La serie no existe");
+        error.status = 404;
+        throw error;
+    }
     const cantidadSeguimientos = await Seguimiento.countDocuments({
         usuario: seguimientoData.usuario
     });

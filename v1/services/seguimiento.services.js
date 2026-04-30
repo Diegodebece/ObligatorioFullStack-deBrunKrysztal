@@ -3,8 +3,11 @@ import Seguimiento from "../models/seguimiento.model.js";
 import { useGemini25Flash } from "./gemini.services.js";
 
 
-export const obtenerSeguimientosService = async () => {
-    const seguimientos = await Seguimiento.find();
+export const obtenerSeguimientosService = async (page, limit) => {
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 5;
+    const skip = (pageNumber - 1) * limitNumber;
+    const seguimientos = await Seguimiento.find().skip(skip).limit(limitNumber).populate("serie");
     return seguimientos;
 }
 
@@ -24,8 +27,11 @@ export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) => {
     return seguimiento;
 }
 
-export const obtenerSeguimientosDeUsuarioService = async (idUsuario) => {
-    const seguimientos = await Seguimiento.find({ usuario: idUsuario }).populate("serie");
+export const obtenerSeguimientosDeUsuarioService = async (idUsuario, page, limit) => {
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 5;
+    const skip = (pageNumber - 1) * limitNumber;
+    const seguimientos = await Seguimiento.find({ usuario: idUsuario }).populate("serie").skip(skip).limit(limitNumber);
     if (!seguimientos || seguimientos.length === 0) {
         const error = new Error("No se encontraron seguimientos para este usuario");
         error.statusCode = 404;

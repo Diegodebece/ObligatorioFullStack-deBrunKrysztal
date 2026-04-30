@@ -2,7 +2,8 @@ import { obtenerCategoriasService, obtenerCategoriaPorIdService, crearCategoriaS
 
 export const obtenerCategorias = async (req, res, next) => {
     try {
-        const categorias = await obtenerCategoriasService();
+        const { page, limit } = req.query;
+        const categorias = await obtenerCategoriasService(page, limit);
         return res.status(200).json({ success: true, message: "Categorías obtenidas correctamente", data: categorias });
     } catch (error) {
         next(error);

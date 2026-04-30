@@ -1,8 +1,11 @@
 import jwt from "jsonwebtoken";
 import Usuario from "../models/usuario.model.js";
 
-export const obtenerUsuariosService = async () => {
-    const usuarios = await Usuario.find();
+export const obtenerUsuariosService = async (page, limit) => {
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 5;
+    const skip = (pageNumber - 1) * limitNumber;
+    const usuarios = await Usuario.find().skip(skip).limit(limitNumber);
     return usuarios;
 };
 

@@ -14,8 +14,11 @@ export const crearCategoriaService = async (categoriaData) => {
     return await nuevaCategoria.save();
 };
 
-export const obtenerCategoriasService = async () => {
-    return await Categoria.find();
+export const obtenerCategoriasService = async (page, limit) => {
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 5;
+    const skip = (pageNumber - 1) * limitNumber;
+    return await Categoria.find().skip(skip).limit(limitNumber);
 };
 
 export const obtenerCategoriaPorIdService = async (id) => {

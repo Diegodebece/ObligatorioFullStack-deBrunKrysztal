@@ -10,7 +10,8 @@ import {
 } from "../services/seguimiento.services.js";
 
 export const obtenerSeguimientos = async (req, res) => {
-    const seguimientos = await obtenerSeguimientosService();
+    const { page, limit } = req.query;
+    const seguimientos = await obtenerSeguimientosService(page, limit);
     if (!seguimientos || seguimientos.length === 0) {
         return res.status(404).json({ message: "No se encontraron seguimientos" });
     }
@@ -18,6 +19,7 @@ export const obtenerSeguimientos = async (req, res) => {
 }
 
 export const obtenerSeguimientosDeUsuario = async (req, res) => {
+    const { page, limit } = req.query;
     const idUsuario = req.decoded.id;
     const seguimientos = await obtenerSeguimientosDeUsuarioService(idUsuario);
     res.status(200).json(seguimientos);

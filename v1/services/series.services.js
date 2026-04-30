@@ -1,8 +1,17 @@
 import Serie from "../models/serie.model.js";
 import Categoria from "../models/categoria.model.js";
 
-export const obtenerSeriesService = async () => {
-    const series = await Serie.find();
+export const obtenerSeriesService = async (page, limit) => {
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 5;
+    const skip = (pageNumber - 1) * limitNumber;
+    const series = await Serie.find().skip(skip).limit(limitNumber);
+
+    if(series.length === 0) {
+        const error = new Error("No hay series disponibles");
+        error.status = 200;
+        throw error;
+    }
     return series;
 }
 
@@ -19,7 +28,7 @@ export const obtenerSeriePorIdService = async (id) => {
 
 export const crearSerieService = async (serie) => {
     const serieExistente = await Serie.findOne({ titulo: serie.titulo });
-
+    
     if (serieExistente) {
         const error = new Error("Ya existe una serie con ese título");
         error.status = 409;

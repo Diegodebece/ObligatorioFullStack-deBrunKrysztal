@@ -2,7 +2,8 @@ import { obtenerUsuariosService, obtenerUsuarioPorIdService, cambiarAPlanPremium
 
 export const obtenerUsuarios = async (req, res, next) => {
     try {
-        const usuarios = await obtenerUsuariosService();
+        const { page, limit } = req.query;
+        const usuarios = await obtenerUsuariosService(page, limit);
         return res.status(200).json({ success: true, message: "Usuarios obtenidos correctamente", data: usuarios });
     } catch (error) {
         next(error);

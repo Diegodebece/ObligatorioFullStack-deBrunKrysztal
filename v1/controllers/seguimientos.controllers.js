@@ -9,14 +9,21 @@ import {
     obtenerSeriesMasVistasService
 } from "../services/seguimiento.services.js";
 
-export const obtenerSeguimientos = async (req, res) => {
-    const { page, limit } = req.query;
-    const seguimientos = await obtenerSeguimientosService(page, limit);
-    if (!seguimientos || seguimientos.length === 0) {
-        return res.status(404).json({ message: "No se encontraron seguimientos" });
+export const obtenerSeguimientos = async (req, res, next) => {
+    try {
+        const { page, limit } = req.query;
+
+        const resultado = await obtenerSeguimientosService(page, limit);
+
+        return res.status(200).json({
+            success: true,
+            message: "Seguimientos obtenidos correctamente",
+            ...resultado
+        });
+    } catch (error) {
+        next(error);
     }
-    res.status(200).json(seguimientos);
-}
+};
 
 
 
@@ -27,7 +34,11 @@ export const obtenerSeguimientosDeUsuario = async (req, res, next) => {
 
         const seguimientos = await obtenerSeguimientosDeUsuarioService(idUsuario, page, limit);
 
-        res.status(200).json(seguimientos);
+        res.status(200).json({
+            success: true,
+            message: "Seguimientos del usuario obtenidos correctamente",
+            ...seguimientos
+        });
 
     } catch (error) {
         next(error);

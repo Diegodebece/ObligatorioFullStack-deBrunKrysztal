@@ -5,11 +5,33 @@ import { useGemini25Flash } from "./gemini.services.js";
 
 
 export const obtenerSeguimientosService = async (page, limit) => {
-    const pageNumber = Number(page) || 1;
-    const limitNumber = Number(limit) || 5;
+    const pageNumber = Math.max(Number(page) || 1, 1);
+    const limitNumber = Math.min(Math.max(Number(limit) || 5, 1), 50);
     const skip = (pageNumber - 1) * limitNumber;
-    const seguimientos = await Seguimiento.find().skip(skip).limit(limitNumber).populate("serie");
-    return seguimientos;
+
+    const [seguimientos, totalItems] = await Promise.all([
+        Seguimiento.find()
+            .populate("serie")
+            .skip(skip)
+            .limit(limitNumber),
+        Seguimiento.countDocuments()
+    ]);
+
+    const totalPages = Math.ceil(totalItems / limitNumber);
+
+    return {
+        data: seguimientos,
+        pagination: {
+            totalItems,
+            totalPages,
+            currentPage: pageNumber,
+            limit: limitNumber,
+            hasNextPage: pageNumber < totalPages,
+            hasPrevPage: pageNumber > 1,
+            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+            prevPage: pageNumber > 1 ? pageNumber - 1 : null
+        }
+    };
 }
 
 export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) => {
@@ -28,22 +50,43 @@ export const obtenerSeguimientoPorIdService = async (id, idUsuarioLogueado) => {
     return seguimiento;
 }
 
+
 export const obtenerSeguimientosDeUsuarioService = async (idUsuario, page, limit) => {
-    const pageNumber = Number(page) || 1;
-    const limitNumber = Number(limit) || 5;
+    const pageNumber = Math.max(Number(page) || 1, 1);
+    const limitNumber = Math.min(Math.max(Number(limit) || 5, 1), 50);
     const skip = (pageNumber - 1) * limitNumber;
-    const seguimientos = await Seguimiento.find({ usuario: idUsuario }).populate("serie").skip(skip).limit(limitNumber);
-    if (!seguimientos || seguimientos.length === 0) {
-        const error = new Error("No se encontraron seguimientos para este usuario");
-        error.status = 404;
-        throw error;
-    }
-    return seguimientos;
+
+    const filtro = { usuario: idUsuario };
+
+    const [seguimientos, totalItems] = await Promise.all([
+        Seguimiento.find(filtro)
+            .populate("serie")
+            .skip(skip)
+            .limit(limitNumber),
+        Seguimiento.countDocuments(filtro)
+    ]);
+
+    const totalPages = Math.ceil(totalItems / limitNumber);
+
+    return {
+        data: seguimientos,
+        pagination: {
+            totalItems,
+            totalPages,
+            currentPage: pageNumber,
+            limit: limitNumber,
+            hasNextPage: pageNumber < totalPages,
+            hasPrevPage: pageNumber > 1,
+            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+            prevPage: pageNumber > 1 ? pageNumber - 1 : null
+        }
+    };
+
 }
 
 export const crearSeguimientoService = async (seguimientoData) => {
     const serieExiste = await Serie.findById(seguimientoData.serie);
-        if (!serieExiste) {
+    if (!serieExiste) {
         const error = new Error("La serie no existe");
         error.status = 404;
         throw error;
@@ -73,7 +116,7 @@ export const crearSeguimientoService = async (seguimientoData) => {
 
 export const actualizarSeguimientoService = async (id, seguimientoData) => {
     const seguimiento = await Seguimiento.findById(id).populate("serie");
-      if (!seguimiento) {
+    if (!seguimiento) {
         const error = new Error("Seguimiento no encontrado");
         error.status = 404;
         throw error;
@@ -83,8 +126,8 @@ export const actualizarSeguimientoService = async (id, seguimientoData) => {
     const temporadaActual = seguimientoData.temporadaActual;
     const episodioActual = seguimientoData.episodioActual;
 
-    
-    if (temporadaActual !== undefined && temporadaActual !== null && temporadaActual > serie.cantidadTemporadas ) {
+
+    if (temporadaActual !== undefined && temporadaActual !== null && temporadaActual > serie.cantidadTemporadas) {
         const error = new Error(
             `La serie solo tiene ${serie.cantidadTemporadas} temporadas`
         );
@@ -111,7 +154,7 @@ export const actualizarSeguimientoService = async (id, seguimientoData) => {
 
     return seguimientoActualizado;
 };
-   
+
 
 export const eliminarSeguimientoService = async (id) => {
     const seguimientoEliminado = await Seguimiento.findByIdAndDelete(id);

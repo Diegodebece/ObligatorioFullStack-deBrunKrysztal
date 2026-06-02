@@ -2,18 +2,34 @@ import Serie from "../models/serie.model.js";
 import Categoria from "../models/categoria.model.js";
 
 export const obtenerSeriesService = async (page, limit) => {
-    const pageNumber = Number(page) || 1;
-    const limitNumber = Number(limit) || 5;
+    const pageNumber = Math.max(Number(page) || 1, 1);
+    const limitNumber = Math.min(Math.max(Number(limit) || 5, 1), 50);
     const skip = (pageNumber - 1) * limitNumber;
-    const series = await Serie.find().skip(skip).limit(limitNumber);
 
-    if(series.length === 0) {
-        const error = new Error("No hay series disponibles");
-        error.status = 200;
-        throw error;
-    }
-    return series;
+    const [series, totalItems] = await Promise.all([
+        Serie.find()
+            .skip(skip)
+            .limit(limitNumber),
+        Serie.countDocuments()
+    ]);
+
+    const totalPages = Math.ceil(totalItems / limitNumber);
+
+    return {
+        data: series,
+        pagination: {
+            totalItems,
+            totalPages,
+            currentPage: pageNumber,
+            limit: limitNumber,
+            hasNextPage: pageNumber < totalPages,
+            hasPrevPage: pageNumber > 1,
+            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+            prevPage: pageNumber > 1 ? pageNumber - 1 : null
+        }
+    };
 }
+
 
 export const obtenerSeriePorIdService = async (id) => {
     const serie = await Serie.findById(id);

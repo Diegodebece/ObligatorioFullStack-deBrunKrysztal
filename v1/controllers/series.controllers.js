@@ -10,10 +10,8 @@ export const obtenerSeries = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
         const series = await obtenerSeriesService(page, limit);
-        if(series.length === 0) {
-            return res.status(200).json({ success: true, message: "No hay series disponibles", data: [] });
-        }
-        return res.status(200).json({ success: true, message: "Series obtenidas correctamente", data: series });
+        
+        return res.status(200).json({ success: true, message: "Series obtenidas correctamente", ...series });
         
     } 
     catch (error) {

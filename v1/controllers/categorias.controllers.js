@@ -4,7 +4,11 @@ export const obtenerCategorias = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
         const categorias = await obtenerCategoriasService(page, limit);
-        return res.status(200).json({ success: true, message: "Categorías obtenidas correctamente", data: categorias });
+        return res.status(200).json({
+            success: true,
+            message: "Categorías obtenidas correctamente",
+            ...categorias
+        });
     } catch (error) {
         next(error);
     }

@@ -14,33 +14,8 @@ export const crearCategoriaService = async (categoriaData) => {
     return await nuevaCategoria.save();
 };
 
-export const obtenerCategoriasService = async (page, limit) => {
-    const pageNumber = Math.max(Number(page) || 1, 1);
-    const limitNumber = Math.min(Math.max(Number(limit) || 5, 1), 50);
-    const skip = (pageNumber - 1) * limitNumber;
-
-    const [categorias, totalItems] = await Promise.all([
-        Categoria.find()
-            .skip(skip)
-            .limit(limitNumber),
-        Categoria.countDocuments()
-    ]);
-
-    const totalPages = Math.ceil(totalItems / limitNumber);
-
-    return {
-        data: categorias,
-        pagination: {
-            totalItems,
-            totalPages,
-            currentPage: pageNumber,
-            limit: limitNumber,
-            hasNextPage: pageNumber < totalPages,
-            hasPrevPage: pageNumber > 1,
-            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
-            prevPage: pageNumber > 1 ? pageNumber - 1 : null
-        }
-    };
+export const obtenerCategoriasService = async () => {
+    return await Categoria.find();
 };
 
 export const obtenerCategoriaPorIdService = async (id) => {

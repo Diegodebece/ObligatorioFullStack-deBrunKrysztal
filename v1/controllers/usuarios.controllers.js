@@ -4,7 +4,11 @@ export const obtenerUsuarios = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
         const usuarios = await obtenerUsuariosService(page, limit);
-        return res.status(200).json({ success: true, message: "Usuarios obtenidos correctamente", data: usuarios });
+        return res.status(200).json({
+            success: true,
+            message: "Usuarios obtenidos correctamente",
+            ...usuarios
+        });
     } catch (error) {
         next(error);
     }

@@ -2,12 +2,32 @@ import jwt from "jsonwebtoken";
 import Usuario from "../models/usuario.model.js";
 
 export const obtenerUsuariosService = async (page, limit) => {
-    const pageNumber = Number(page) || 1;
-    const limitNumber = Number(limit) || 5;
-    const skip = (pageNumber - 1) * limitNumber;
-    const usuarios = await Usuario.find().skip(skip).limit(limitNumber);
-    return usuarios;
+  const pageNumber = Math.max(Number(page) || 1, 1);
+  const limitNumber = Math.min(Math.max(Number(limit) || 5, 1), 50);
+  const skip = (pageNumber - 1) * limitNumber;
+
+  const [usuarios, totalItems] = await Promise.all([
+    Usuario.find().skip(skip).limit(limitNumber),
+    Usuario.countDocuments(),
+  ]);
+
+  const totalPages = Math.ceil(totalItems / limitNumber);
+
+  return {
+    data: usuarios,
+    pagination: {
+      totalItems,
+      totalPages,
+      currentPage: pageNumber,
+      limit: limitNumber,
+      hasNextPage: pageNumber < totalPages,
+      hasPrevPage: pageNumber > 1,
+      nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+      prevPage: pageNumber > 1 ? pageNumber - 1 : null,
+    },
+  };
 };
+
 
 export const obtenerUsuarioPorIdService = async (id) => {
     const usuario = await Usuario.findById(id);

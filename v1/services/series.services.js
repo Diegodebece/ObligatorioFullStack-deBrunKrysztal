@@ -38,13 +38,13 @@ export const obtenerSeriePorIdService = async (id) => {
         error.status = 404;
         throw error;
     }
-    
+
     return serie;
 }
 
 export const crearSerieService = async (serie) => {
     const serieExistente = await Serie.findOne({ titulo: serie.titulo });
-    
+
     if (serieExistente) {
         const error = new Error("Ya existe una serie con ese título");
         error.status = 409;
@@ -66,6 +66,11 @@ export const crearSerieService = async (serie) => {
 
 export const actualizarSerieService = async (id, serie) => {
 
+    if (!serie || Object.keys(serie).length === 0) {
+        const error = new Error("No hay datos para actualizar");
+        error.status = 400;
+        throw error;
+    }
     const serieActual = await Serie.findById(id);
 
     if (!serieActual) {
@@ -97,6 +102,6 @@ export const eliminarSerieService = async (id) => {
         error.status = 404;
         throw error;
     }
-    
+
     return serieEliminada;
 }

@@ -1,5 +1,5 @@
 import { obtenerSeriesService, obtenerSeriePorIdService, crearSerieService, actualizarSerieService, eliminarSerieService } from '../services/series.services.js';
-import { crearSerieSchema } from "../validators/series.validators.js";
+import { crearSerieSchema, actualizarSerieSchema } from "../validators/series.validators.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
 import cloudinary from "../config/cloudinary.js";
@@ -62,13 +62,43 @@ export const crearSerie = async (req, res, next) => {
 };
 
 export const actualizarSerie = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const serieActualizada = await actualizarSerieService(id, req.validatedBody);
-        return res.status(200).json({ success: true, message: "Serie actualizada correctamente", data: serieActualizada });
-    } catch (error) {
-        next(error);
+  try {
+    const { id } = req.params;
+
+    await runMulterSingle(upload, "imagen", req, res);
+
+    const datosActualizados = { ...req.body };
+
+    if (req.file) {
+      const result = await uploadBufferToCloudinary(cloudinary, req.file.buffer, {
+        resource_type: "auto",
+        folder: "series",
+      });
+
+      datosActualizados.imagen = result.secure_url;
     }
+
+    const { error, value } = actualizarSerieSchema.validate(datosActualizados, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      const validationError = new Error("Error de validación");
+      validationError.status = 400;
+      validationError.details = error.details.map((detail) => detail.message);
+      throw validationError;
+    }
+
+    const serieActualizada = await actualizarSerieService(id, value);
+
+    return res.status(200).json({
+      success: true,
+      message: "Serie actualizada correctamente",
+      data: serieActualizada,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const eliminarSerie = async (req, res, next) => {

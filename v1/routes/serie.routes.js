@@ -9,7 +9,7 @@ const router = express.Router({ mergeParams: true });
 router.get("/", obtenerSeries);
 router.post("/", authorize(["admin"]), crearSerie);
 router.get("/:id", obtenerSeriePorId);
-router.patch("/:id", authorize(["admin"]), validateBodyMiddleware(crearSerieSchema), actualizarSerie);
+router.patch("/:id", authorize(["admin"]), actualizarSerie);
 router.delete("/:id", authorize(["admin"]), eliminarSerie);
 
 export default router;

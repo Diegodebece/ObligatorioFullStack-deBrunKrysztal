@@ -56,3 +56,56 @@ export const crearSerieSchema = Joi.object({
         "any.required": "La categoría es obligatoria"
     })
 });
+
+
+export const actualizarSerieSchema = Joi.object({
+  titulo: Joi.string().trim().min(3).max(100).optional().messages({
+    "string.base": "El título debe ser un texto",
+    "string.empty": "El título no puede estar vacío",
+    "string.min": "El título debe tener al menos {#limit} caracteres",
+    "string.max": "El título no puede tener más de {#limit} caracteres",
+  }),
+
+  descripcion: Joi.string().max(500).optional().messages({
+    "string.base": "La descripción debe ser un texto",
+    "string.max": "La descripción no puede tener más de {#limit} caracteres",
+  }),
+
+  plataforma: Joi.string().min(1).max(50).optional().messages({
+    "string.base": "La plataforma debe ser un texto",
+    "string.empty": "La plataforma no puede estar vacía",
+    "string.min": "La plataforma no puede estar vacía",
+    "string.max": "La plataforma no puede tener más de {#limit} caracteres",
+  }),
+
+  cantidadTemporadas: Joi.number().integer().min(1).optional().messages({
+    "number.base": "La cantidad de temporadas debe ser un número",
+    "number.integer": "La cantidad de temporadas debe ser un número entero",
+    "number.min": "La cantidad de temporadas debe ser al menos 1",
+  }),
+
+  episodiosPorTemporada: Joi.number().integer().min(1).optional().messages({
+    "number.base": "La cantidad de episodios por temporada debe ser un número",
+    "number.integer": "La cantidad de episodios por temporada debe ser un número entero",
+    "number.min": "La cantidad de episodios por temporada debe ser al menos 1",
+  }),
+
+  minutosPorEpisodio: Joi.number().min(1).optional().messages({
+    "number.base": "Los minutos por episodio deben ser un número",
+    "number.min": "Los minutos por episodio deben ser al menos 1",
+  }),
+
+  imagen: Joi.string().uri().optional().messages({
+    "string.base": "La imagen debe ser un texto",
+    "string.empty": "La imagen no puede estar vacía",
+    "string.uri": "La imagen debe ser una URL válida",
+  }),
+
+  categoria: Joi.string().trim().hex().optional().messages({
+    "string.base": "La categoría debe ser un texto",
+    "string.empty": "La categoría no puede estar vacía",
+    "string.hex": "La categoría debe tener un identificador válido",
+  }),
+}).min(1).messages({
+  "object.min": "Debés enviar al menos un dato para actualizar la serie",
+});

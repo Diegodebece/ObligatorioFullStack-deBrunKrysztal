@@ -36,12 +36,19 @@ Architecture
 The project follows a layered structure to separate responsibilities:
 
 src/
+
 ├── controllers/
+
 ├── services/
+
 ├── models/
+
 ├── routes/
+
 ├── middlewares/
+
 ├── validators/
+
 └── ...
 Routes define the API endpoints.
 Controllers handle HTTP requests and responses.

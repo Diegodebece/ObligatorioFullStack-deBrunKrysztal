@@ -50,6 +50,7 @@ src/
 ├── validators/
 
 └── ...
+
 Routes define the API endpoints.
 Controllers handle HTTP requests and responses.
 Services contain the application and business logic.

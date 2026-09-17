@@ -1,43 +1,43 @@
 # Series Tracker API
 
-REST API developed for a full-stack web application that allows users to discover, track and manage TV series.
+API REST desarrollada para una aplicación web full-stack que permite a los usuarios descubrir, seguir y gestionar series de TV.
 
-The backend handles authentication, users, series, categories, progress tracking, ratings and favorites. It also integrates external services to provide additional series information and personalized recommendations.
+El backend se encarga de la autenticación, usuarios, series, categorías, seguimiento de progreso, calificaciones y favoritos. También integra servicios externos para obtener información adicional sobre series y generar recomendaciones personalizadas.
 
-## Features
+## Funcionalidades
 
-* User registration and authentication using JWT
-* Password hashing with bcrypt
-* Role-based authorization (`viewer` / `admin`)
-* TV series management
-* Categories management
-* User series tracking
-* Episode and season progress
-* Favorites and ratings
-* User statistics
-* Personalized series recommendations using Google Gemini
-* Integration with the TVMaze API
-* Image upload and management with Cloudinary
-* Request validation with Joi
-* MongoDB persistence using Mongoose
+- Registro e inicio de sesión de usuarios con JWT
+- Hash de contraseñas con bcrypt
+- Autorización basada en roles (`viewer` / `admin`)
+- Gestión de series de TV
+- Gestión de categorías
+- Seguimiento de series por usuario
+- Progreso por episodios y temporadas
+- Favoritos y calificaciones
+- Estadísticas de usuario
+- Recomendaciones personalizadas con Google Gemini
+- Integración con la API de TVMaze
+- Subida y gestión de imágenes con Cloudinary
+- Validación de requests con Joi
+- Persistencia en MongoDB usando Mongoose
 
-## Tech Stack
+## Tecnologías
 
-* **Node.js**
-* **Express.js**
-* **MongoDB**
-* **Mongoose**
-* **JWT**
-* **bcrypt**
-* **Joi**
-* **Multer**
-* **Cloudinary**
-* **Google Gemini API**
-* **TVMaze API**
+- **Node.js**
+- **Express.js**
+- **MongoDB**
+- **Mongoose**
+- **JWT**
+- **bcrypt**
+- **Joi**
+- **Multer**
+- **Cloudinary**
+- **Google Gemini API**
+- **TVMaze API**
 
-## Architecture
+## Arquitectura
 
-The project follows a layered structure to separate responsibilities.
+El proyecto sigue una estructura por capas para separar responsabilidades.
 
 ```text
 src/
@@ -50,57 +50,57 @@ src/
 └── ...
 ```
 
-* **Routes** define the API endpoints.
-* **Controllers** handle HTTP requests and responses.
-* **Services** contain the application and business logic.
-* **Models** define MongoDB schemas using Mongoose.
-* **Middlewares** handle authentication, authorization and other cross-cutting concerns.
-* **Validators** validate incoming request data.
+- **Routes** define los endpoints de la API.
+- **Controllers** manejan las solicitudes y respuestas HTTP.
+- **Services** contienen la lógica de aplicación y de negocio.
+- **Models** definen los esquemas de MongoDB usando Mongoose.
+- **Middlewares** manejan autenticación, autorización y otras responsabilidades transversales.
+- **Validators** validan los datos recibidos en las solicitudes.
 
-## Authentication
+## Autenticación
 
-The API uses JSON Web Tokens (JWT) for authentication.
+La API utiliza JSON Web Tokens (JWT) para la autenticación.
 
-Protected routes require a valid token to be included in the request headers.
+Las rutas protegidas requieren incluir un token válido en los headers de la solicitud.
 
 ```http
 Authorization: Bearer <token>
 ```
 
-Authorization middleware is also used to restrict certain operations according to the user's role.
+También se utiliza middleware de autorización para restringir ciertas operaciones según el rol del usuario.
 
-## External APIs
+## APIs externas
 
 ### TVMaze
 
-TVMaze is used to retrieve additional information about TV series and support the recommendation functionality.
+TVMaze se utiliza para obtener información adicional sobre series de TV y apoyar funcionalidades relacionadas con recomendaciones.
 
 ### Google Gemini
 
-Google Gemini is used to generate personalized series recommendations based on user information and viewing activity.
+Google Gemini se utiliza para generar recomendaciones personalizadas de series en base a la información del usuario y su actividad de visualización.
 
 ### Cloudinary
 
-Cloudinary is used for image storage and management.
+Cloudinary se utiliza para el almacenamiento y la gestión de imágenes.
 
-## Installation
+## Instalación
 
-Clone the repository:
+Clonar el repositorio:
 
 ```bash
 git clone <repository-url>
 cd <repository-folder>
 ```
 
-Install dependencies:
+Instalar dependencias:
 
 ```bash
 npm install
 ```
 
-Create a `.env` file in the root directory and configure the environment variables required by the application.
+Crear un archivo `.env` en la raíz del proyecto y configurar las variables de entorno requeridas por la aplicación.
 
-Example:
+Ejemplo:
 
 ```env
 PORT=3000
@@ -114,13 +114,13 @@ CLOUDINARY_API_SECRET=your_api_secret
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Start the application:
+Iniciar la aplicación:
 
 ```bash
 npm start
 ```
 
-For development:
+Para desarrollo:
 
 ```bash
 npm run dev
@@ -128,46 +128,46 @@ npm run dev
 
 ## API
 
-The REST API provides resources for:
+La API REST provee recursos para:
 
-* Authentication
-* Users
-* Series
-* Categories
-* Series tracking and progress
-* Favorites
-* Ratings
-* Statistics
-* Recommendations
+- Autenticación
+- Usuarios
+- Series
+- Categorías
+- Seguimiento y progreso de series
+- Favoritos
+- Calificaciones
+- Estadísticas
+- Recomendaciones
 
-## Deployment
+## Deploy
 
-The backend is deployed on **Vercel**.
+El backend está desplegado en **Vercel**.
 
-Data persistence is handled through **MongoDB** using **Mongoose**.
+La persistencia de datos se gestiona con **MongoDB** usando **Mongoose**.
 
 ## Frontend
 
-The application includes a separate frontend developed with:
+La aplicación incluye un frontend separado desarrollado con:
 
-* React
-* Vite
-* Redux Toolkit
-* React Router
-* Axios
-* Chart.js
+- React
+- Vite
+- Redux Toolkit
+- React Router
+- Axios
+- Chart.js
 
-The frontend communicates with this REST API and is maintained in a separate repository.
+El frontend se comunica con esta API REST y se mantiene en un repositorio separado.
 
-## Project Context
+## Contexto del proyecto
 
-This project was developed as an academic full-stack application with emphasis on REST API development, authentication and authorization, persistence, integration with external APIs and separation of responsibilities.
+Este proyecto fue desarrollado como una aplicación full-stack académica, con foco en desarrollo de APIs REST, autenticación y autorización, persistencia, integración con APIs externas y separación de responsabilidades.
 
-## Authors
+## Autores
 
-* Diego de Brun
-* Karina Krysztal
+- Diego de Brun
+- Karina Krysztal
 
-## License
+## Licencia
 
-This project was developed for educational purposes.
+Este proyecto fue desarrollado con fines académicos.
